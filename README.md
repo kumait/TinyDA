@@ -7,6 +7,12 @@ The main idea behind TinyDA is using nameless paramaters in SQL statements, this
 ``` CS
 IDataAccessor da = new DataAccessor(connection);
 
+// insert user
+int id = da.executeScaral<int>("insert into u(name) output inserted.id values (?)", "Jack");
+
+// update user
+int count = da.executeUpdate("update user set name = ? where id = ?", "John", 22);
+
 // get user with id 22
 User u = da.getObject<User>("select * from User where id = ?", 22);
 
@@ -21,4 +27,7 @@ List<string> names = da.getValues<string>("select name from user", 0);
 
 // get users as a result of running a stored procedure
 User u = da.getListSP<User>("GET_USERS", 22);
+
+
+
 ```
