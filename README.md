@@ -8,7 +8,7 @@ The main idea behind TinyDA is using nameless paramaters in SQL statements, this
 IDataAccessor da = new DataAccessor(connection);
 
 // insert user
-int id = da.ExecuteScalar<int>("insert into u(name) output inserted.id values (?)", "Jack");
+int id = da.ExecuteScalar<int>("insert into user(name) output inserted.id values (?)", "Jack");
 
 // update user
 int count = da.ExecuteUpdate("update user set name = ? where id = ?", "John", 22);
