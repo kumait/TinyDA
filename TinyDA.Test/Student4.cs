@@ -3,18 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TinyDA.Mappers;
 
 namespace TinyDA.Test
 {
-    public class Student
+    public class Student4
     {
-        [Column("S_ID")]
-        public int? Id { get; set; }
-
-        public int? Age { get; set; }
-        
-        [Column("S_NAME")]
+        public int? Number { get; set; }
         public string Name { get; set; }
+        public int? CourseCount { get; set; }
+        public DateTime DateOfBirth { get; set; }
     }
 }

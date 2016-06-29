@@ -43,6 +43,7 @@
     <Compile Include="Mappers\Column.cs" />
     <Compile Include="Data\DataAccessor.cs" />
     <Compile Include="Data\IDataAccessor.cs" />
+    <Compile Include="Mappers\CustomFieldMapper.cs" />
     <Compile Include="Mappers\SimpleFieldMapper.cs" />
     <Compile Include="Mappers\IFieldMapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
