@@ -47,7 +47,7 @@ User u = da.getListSP<User>("GET_USERS", 22);
 
 ### Using a custom mapper
 
-####Table
+####Database
 
 ``` SQL
 CREATE TABLE STUDENT (
