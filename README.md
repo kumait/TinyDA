@@ -26,7 +26,7 @@ IDataAccessor da = new DataAccessor(connection);
 int id = da.ExecuteScalar<int>("insert into user(name) output inserted.id values (?)", "Jack");
 
 // update user
-int count = da.ExecuteUpdate("update user set name = ? where id = ?", "John", 22);
+int count = da.ExecuteNonQuery("update user set name = ? where id = ?", "John", 22);
 
 // get user with id 22
 User u = da.getObject<User>("select * from User where id = ?", 22);
