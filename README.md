@@ -3,7 +3,7 @@
 ***
 The main idea behind TinyDA is using nameless paramaters in SQL statements, this makes it possible to create a simple API that is easy and fun to use.
 
-TinyDA creates a thin layer over ADO.net to eleminate most if not all boilerplate code. The design also promotes minimal invasive development where the library does not impose any requirements on the developer.
+TinyDA creates a thin layer over ADO.net to eleminate most if not all of boilerplate code. The design also promotes minimal invasive development where the library does not impose any requirements on the developer.
 ## Usage
 
 ### Field Mapping
