@@ -46,7 +46,37 @@ User u = da.getListSP<User>("GET_USERS", 22);
 ```
 
 ### Using a custom mapper
+
+####Table
+
+``` SQL
+CREATE TABLE STUDENT (
+  STUDENT_ID int NOT NULL identity,
+  STUDENT_NAME varchar(100) NOT NULL,
+  COURSES int NOT NULL,
+  BIRTH_DATE datetime NULL,
+  PRIMARY KEY (STUDENT_ID)
+)
+GO
+
+INSERT INTO STUDENT (STUDENT_NAME, COURSES, BIRTH_DATE) VALUES ('Jack', 8, '1990-12-01');
+INSERT INTO STUDENT (STUDENT_NAME, COURSES, BIRTH_DATE) VALUES ('John', 4, '1986-08-06');
+INSERT INTO STUDENT (STUDENT_NAME, COURSES, BIRTH_DATE) VALUES ('Sara', 16, '1988-08-14');
 ```
+####Student Class
+``` CS
+public class Student4
+{
+    public int? Number { get; set; }
+    public string Name { get; set; }
+    public int? CourseCount { get; set; }
+    public DateTime DateOfBirth { get; set; }
+}
+```
+
+###Accessing Data
+
+``` CS
 IDataAccessor da = new DataAccessor(connection);
 
 var mapper = new CustomFieldMapper((f) => {
