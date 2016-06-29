@@ -7,11 +7,12 @@ TinyDA creates a thin layer over ADO.net to eleminate most if not all of boilerp
 ## Usage
 
 ### Field Mapping
-One of the main problems to be tackled when accessing data in relational databases is how to map field names in tables to properties in classes. TinyDA uses the `IFieldMapper` interface to achieve that. It is shipped with 3 implementations.
+One of the main problems to be tackled when accessing data in relational databases is how to map field names in tables to properties in classes. TinyDA uses the `IFieldMapper` interface to achieve that. It is shipped with 4 implementations.
 
 1. `SimpleFieldMapper`: Maps field names to property names as they are with no change.
 2. `UnderscoreFieldMapper`: Convert field names written in the UNDERSCORE_STYLE to pascal casing. for example if the field name is STUDENT_ID it gets mapped to a property named StudentId.
 3. `AttributeFieldMapper`: Maps field names to property names by using the `Column` attribute which can be applied on properties to provide the name of the field the property is linked to.
+4. `CustomFieldMapper`: is a basic implementation that allows the developer to map fields using a lambda function.
 
 *The developer is free to provide any custom field mappers according to needs of none if the above mappers suffice.*
 
@@ -42,7 +43,25 @@ List<string> names = da.getValues<string>("select name from user", 0);
 
 // get users as a result of running a stored procedure
 User u = da.getListSP<User>("GET_USERS", 22);
-
-
-
 ```
+
+### Using a custom mapper
+```
+IDataAccessor da = new DataAccessor(connection);
+
+var mapper = new CustomFieldMapper((f) => {
+    switch (f)
+    {
+        case "STUDENT_ID": return "Number";
+        case "STUDENT_NAME": return "Name";
+        case "COURSES": return "CourseCount";
+        case "BIRTH_DATE": return "DateOfBirth";
+        default: return null;
+    }
+});
+
+Student4 student = da.GetObject<Student4>("select * from student where STUDENT_NAME = ?", mapper, "Jack");
+List<Student3> students = da.GetList<Student3>("select * from student", mapper);
+```
+
+For more examples, please have a look at the [MapperTest.cs](https://github.com/kumait/TinyDA/blob/v1.1/TinyDA.Test/MapperTest.cs)
