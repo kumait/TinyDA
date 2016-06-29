@@ -373,5 +373,14 @@ namespace TinyDA.Data
                 return command.ExecuteNonQuery();
             }
         }
+
+        /// <summary>
+        /// Use ExecuteNonQuery instead to have the naming as ADO.net
+        /// </summary>
+        [Obsolete]
+        public int ExecuteUpdate(string sql, params object[] parameters)
+        {
+            return ExecuteNonQuery(sql, parameters);
+        }
     }
 }

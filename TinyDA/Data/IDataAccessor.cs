@@ -28,5 +28,8 @@ namespace TinyDA.Data
 
         int ExecuteNonQuery(string sql, params object[] parameters);
         
+        [Obsolete]
+        int ExecuteUpdate(string sql, params object[] parameters);
+        
     }
 }
