@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TinyDA.Data
+namespace TinyDA.Mappers
 {
-    public interface INamingConverter
+    public interface IFieldMapper
     {
-        string FromDB(string value);
-        string ToDB(string value);
+        string MapField(string fieldName);
     }
 }

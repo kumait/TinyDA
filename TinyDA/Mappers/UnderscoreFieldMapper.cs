@@ -4,13 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TinyDA.Data
+namespace TinyDA.Mappers
 {
-    public class NaturalNamingConverter: INamingConverter
+    /// <summary>
+    /// Converts underscore style field names to pascal case propery names
+    /// STUDENT_NAME is mapped to StudentName for example.
+    /// </summary>
+    public class UnderscoreFieldMapper: IFieldMapper
     {
-        public string FromDB(string value)
+        private string GetPropertyName(string fieldName)
         {
-            string s = value.ToLower();
+            string s = fieldName.ToLower();
             bool flag = false;
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < s.Length; i++)
@@ -33,6 +37,7 @@ namespace TinyDA.Data
             return sb.ToString();
         }
 
+        /*
         public string ToDB(string value)
         {
             StringBuilder sb = new StringBuilder();
@@ -46,6 +51,12 @@ namespace TinyDA.Data
                 sb.Append(ch.ToString().ToUpper());
             }
             return sb.ToString();
+        }
+        */
+
+        public string MapField(string fieldName)
+        {
+            return GetPropertyName(fieldName);
         }
     }
 }
