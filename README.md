@@ -44,8 +44,7 @@ List<string> names = da.getValues<string>("select name from user", 0);
 // get users as a result of running a stored procedure
 User u = da.getListSP<User>("GET_USERS", 22);
 ```
-
-### Using a custom mapper
+## Using mappers
 
 ####Database
 
@@ -63,6 +62,51 @@ INSERT INTO STUDENT (STUDENT_NAME, COURSES, BIRTH_DATE) VALUES ('Jack', 8, '1990
 INSERT INTO STUDENT (STUDENT_NAME, COURSES, BIRTH_DATE) VALUES ('John', 4, '1986-08-06');
 INSERT INTO STUDENT (STUDENT_NAME, COURSES, BIRTH_DATE) VALUES ('Sara', 16, '1988-08-14');
 ```
+### Attribute Mapper
+
+####Student Class
+
+``` CS
+public class Student
+{
+    [Column("STUDENT_ID")]
+    public int? Id { get; set; }
+
+    [Column("STUDENT_NAME")]
+    public string Name { get; set; }
+
+    [Column("COURSES")]
+    public int? Courses { get; set; }
+
+    [Column("BIRTH_DATE")]
+    public DateTime BirthDate { get; set; }
+}
+```
+
+###Accessing Data
+``` CS
+string SqlServerConnectionString = "Data Source=localhost;Initial Catalog=tinydatest;Integrated Security=True";
+using (IDbConnection connection = new SqlConnection(SqlServerConnectionString))
+{
+    connection.Open();
+    IDataAccessor da = new DataAccessor(connection);
+    var mapper = new AttributeFieldMapper(typeof(Student));
+
+    var student = da.GetObject<Student>("select * from student where STUDENT_NAME = ?", mapper, "Jack");
+
+    int insertedId = da.ExecuteScalar<int>("insert into student(STUDENT_NAME, COURSES, BIRTH_DATE) output inserted.STUDENT_ID VALUES (?, ?, ?)", "Kumait", 16, DateTime.Now);
+
+    int deletedCount = da.ExecuteNonQuery("delete from student where STUDENT_NAME like ?", "Kumait");
+
+    var students = da.GetList<Student>("select * from student");
+
+}
+
+```
+
+
+### Custom mapper
+
 ####Student Class
 ``` CS
 public class Student4
