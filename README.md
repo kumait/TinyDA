@@ -93,13 +93,9 @@ using (IDbConnection connection = new SqlConnection(SqlServerConnectionString))
     var mapper = new AttributeFieldMapper(typeof(Student));
 
     var student = da.GetObject<Student>("select * from student where STUDENT_NAME = ?", mapper, "Jack");
-
     int insertedId = da.ExecuteScalar<int>("insert into student(STUDENT_NAME, COURSES, BIRTH_DATE) output inserted.STUDENT_ID VALUES (?, ?, ?)", "Kumait", 16, DateTime.Now);
-
     int deletedCount = da.ExecuteNonQuery("delete from student where STUDENT_NAME like ?", "Kumait");
-
     var students = da.GetList<Student>("select * from student");
-
 }
 
 ```
@@ -139,3 +135,7 @@ List<Student3> students = da.GetList<Student3>("select * from student", mapper);
 ```
 
 For more examples, please have a look at the [MapperTest.cs](https://github.com/kumait/TinyDA/blob/v1.1/TinyDA.Test/MapperTest.cs)
+
+##Installation
+
+TinyDA is available on [NuGet](https://www.nuget.org/packages/TinyDA/)
