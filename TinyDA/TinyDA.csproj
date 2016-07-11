@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\DataUtils.cs" />
     <Compile Include="Mappers\AttributeFieldMapper.cs" />
     <Compile Include="Mappers\Column.cs" />
     <Compile Include="Data\DataAccessor.cs" />

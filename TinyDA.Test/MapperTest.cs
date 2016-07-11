@@ -13,9 +13,8 @@ namespace TinyDA.Test
     public class MapperTest
     {
         private const string MySqlConnectionString = "Server=localhost;Database=tinydatest;Uid=developer;Pwd=dev123;";
-        private const string SqlServerConnectionString = "Data Source=localhost;Initial Catalog=tinydatest;Integrated Security=True";
+        private const string SqlServerConnectionString = "Data Source=localhost\\SQLEXPRESS;Initial Catalog=tinydatest;Integrated Security=True";
         private IDbConnection connection;
-
 
         [TestInitialize]
         public void CreateConnection()
