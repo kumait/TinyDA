@@ -70,6 +70,7 @@
     <Compile Include="MapperTest.cs" />
     <Compile Include="Student4.cs" />
     <Compile Include="DictionaryTest.cs" />
+    <Compile Include="StoredProcedureTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TinyDA\TinyDA.csproj">

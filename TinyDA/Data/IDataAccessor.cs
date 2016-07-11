@@ -25,6 +25,8 @@ namespace TinyDA.Data
         List<T> GetValues<T>(string sql, int fieldIndex, params object[] parameters);
         List<T> GetListSP<T>(string name, IFieldMapper fieldMapper, params object[] parameters);
         List<T> GetListSP<T>(string name, params object[] parameters);
+        List<IDictionary<string, object>> GetListSP(string name, IFieldMapper fieldMapper, params object[] parameters);
+        List<IDictionary<string, object>> GetListSP(string name, params object[] parameters);
 
         
         T ExecuteScalar<T>(string sql, params object[] parameters);

@@ -345,6 +345,25 @@ namespace TinyDA.Data
             return GetListSP<T>(name, defaultFieldMapper, parameters);
         }
 
+        public List<IDictionary<string, object>> GetListSP(string name, IFieldMapper fieldMapper, params object[] parameters)
+        {
+            List<IDictionary<string, object>> items;
+            using (var command = connection.CreateCommand())
+            {
+                PrepareSpCommand(command, name, parameters);
+                using (var reader = command.ExecuteReader())
+                {
+                    items = DataUtils.GetList(reader, fieldMapper);
+                }
+            }
+            return items;
+        }
+
+        public List<IDictionary<string, object>> GetListSP(string name, params object[] parameters)
+        {
+            return GetListSP(name, defaultFieldMapper, parameters);
+        }
+
         /// <summary>
         /// Executes a scalar SQL statement and returns the result of it.
         /// </summary>
