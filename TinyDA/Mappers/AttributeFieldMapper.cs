@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TinyDA.Mappers
 {
@@ -12,14 +9,15 @@ namespace TinyDA.Mappers
     /// </summary>
     public class AttributeFieldMapper: IFieldMapper
     {
-        private Type targetType;
+        private readonly Type targetType;
 
         public AttributeFieldMapper(Type targetType)
         {
             this.targetType = targetType;
         }
 
-        private PropertyInfo findProperty(string fieldName)
+        /*
+        private PropertyInfo FindProperty(string fieldName)
         {
             PropertyInfo[] properties = targetType.GetProperties();
             foreach(PropertyInfo p in properties)
@@ -32,10 +30,27 @@ namespace TinyDA.Mappers
             }
             return null;
         }
+        */ 
+
+        private PropertyInfo FindProperty(string fieldName)
+        {
+            var properties = targetType.GetProperties();
+            foreach (var p in properties)
+            {
+                var attrs = p.GetCustomAttributes(typeof(Column), false);
+                if (attrs.Length == 0) continue;
+                var col = (Column) attrs[0];
+                if (col != null && col.GetName() == fieldName)
+                {
+                    return p;
+                }
+            }
+            return null;
+        }
 
         public string MapField(string fieldName)
         {
-            PropertyInfo p = findProperty(fieldName);
+            PropertyInfo p = FindProperty(fieldName);
             return p != null ? p.Name : null;
         }
 

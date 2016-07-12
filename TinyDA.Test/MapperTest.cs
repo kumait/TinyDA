@@ -1,7 +1,5 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Data;
-using MySql.Data.MySqlClient;
 using TinyDA.Data;
 using System.Collections.Generic;
 using TinyDA.Mappers;
