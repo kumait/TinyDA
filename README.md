@@ -138,4 +138,4 @@ For more examples, please have a look at the [MapperTest.cs](https://github.com/
 
 ##Installation
 
-TinyDA is available on [NuGet](https://www.nuget.org/packages/TinyDA/). You can download the latest build [here](https://github.com/kumait/TinyDA/releases)
+TinyDA is available on [NuGet](https://www.nuget.org/packages/TinyDA/), or you can download the latest build [here](https://github.com/kumait/TinyDA/releases).
