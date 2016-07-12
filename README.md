@@ -134,8 +134,8 @@ Student4 student = da.GetObject<Student4>("select * from student where STUDENT_N
 List<Student3> students = da.GetList<Student3>("select * from student", mapper);
 ```
 
-For more examples, please have a look at the [MapperTest.cs](https://github.com/kumait/TinyDA/blob/v1.1/TinyDA.Test/MapperTest.cs)
+For more examples, please have a look at the [Test Project](https://github.com/kumait/TinyDA/tree/v1.2/TinyDA.Test).
 
 ##Installation
 
-TinyDA is available on [NuGet](https://www.nuget.org/packages/TinyDA/)
+TinyDA is available on [NuGet](https://www.nuget.org/packages/TinyDA/), or you can download the latest build [here](https://github.com/kumait/TinyDA/releases).
