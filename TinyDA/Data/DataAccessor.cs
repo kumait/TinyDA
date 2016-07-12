@@ -12,15 +12,25 @@ namespace TinyDA.Data
     public class DataAccessor: IDataAccessor
     {
         private readonly IDbConnection connection;
+        private readonly IDbTransaction transaction;
+
         private readonly IFieldMapper defaultFieldMapper;
 
-        public DataAccessor(IDbConnection connection, IFieldMapper defaultFieldMapper)
+        public DataAccessor(IDbConnection connection, IDbTransaction transaction, IFieldMapper defaultFieldMapper)
         {
             this.connection = connection;
+            this.transaction = transaction;
             this.defaultFieldMapper = defaultFieldMapper ?? new SimpleFieldMapper();
         }
 
-        public DataAccessor(IDbConnection connection): this(connection, null){}
+        public DataAccessor(IDbConnection connection, IFieldMapper defaultFieldMapper)
+            : this(connection, null, defaultFieldMapper) { }
+
+        public DataAccessor(IDbConnection connection, IDbTransaction transaction)
+            : this(connection, transaction, null) { }
+
+        public DataAccessor(IDbConnection connection)
+            : this(connection, null, null) { }
 
         private static string ProcessSql(string sql)
         {
@@ -42,7 +52,7 @@ namespace TinyDA.Data
 
         private static string ProcessSpSql(string name, int paramCount)
         {
-            StringBuilder stringBuilder = new StringBuilder();
+            var stringBuilder = new StringBuilder();
             stringBuilder.AppendFormat("exec {0} ", name);
             for (var i = 0; i < paramCount; i++)
             {
@@ -78,6 +88,16 @@ namespace TinyDA.Data
             PrepareCommandParameters(command, parameters);
         }
 
+        private IDbCommand CreateCommand()
+        {
+            var command = connection.CreateCommand();
+            if (transaction != null)
+            {
+                command.Transaction = transaction;
+            }
+            return command;
+        }
+
         /// <summary>
         /// Returns a single object as a result of running SQL statement
         /// </summary>
@@ -89,7 +109,7 @@ namespace TinyDA.Data
         public T GetObject<T>(string sql, IFieldMapper fieldMapper, params object[] parameters)
         {
             var t = default(T);
-            using (var command = connection.CreateCommand())
+            using (var command = CreateCommand())
             {
                 PrepareCommand(command, sql, parameters);
                 using (var reader = command.ExecuteReader())
@@ -137,7 +157,7 @@ namespace TinyDA.Data
         public IDictionary<string, object> GetObject(string sql, IFieldMapper fieldMapper, params object[] parameters)
         {
             IDictionary<string, object> result = null;
-            using (var command = connection.CreateCommand())
+            using (var command = CreateCommand())
             {
                 PrepareCommand(command, sql, parameters);
                 using (var reader = command.ExecuteReader())
@@ -163,7 +183,7 @@ namespace TinyDA.Data
         public List<T> GetList<T>(string sql, IFieldMapper fieldMapper, params object[] parameters)
         {
             List<T> items;
-            using (var command = connection.CreateCommand())
+            using (var command = CreateCommand())
             {
                 PrepareCommand(command, sql, parameters);
                 using (var reader = command.ExecuteReader())
@@ -197,7 +217,7 @@ namespace TinyDA.Data
         public List<IDictionary<string, object>> GetList(string sql, IFieldMapper fieldMapper, params object[] parameters)
         {
             List<IDictionary<string, object>> items;
-            using (var command = connection.CreateCommand())
+            using (var command = CreateCommand())
             {
                 PrepareCommand(command, sql, parameters);
                 using (var reader = command.ExecuteReader())
@@ -231,7 +251,7 @@ namespace TinyDA.Data
         public T GetValue<T>(string sql, int fieldIndex, params object[] parameters)
         {
             var t = default(T);
-            using (var command = connection.CreateCommand())
+            using (var command = CreateCommand())
             {
                 PrepareCommand(command, sql, parameters);
                 using (var reader = command.ExecuteReader())
@@ -257,7 +277,7 @@ namespace TinyDA.Data
         public List<T> GetValues<T>(string sql, int fieldIndex, params object[] parameters)
         {
             List<T> items;
-            using (var command = connection.CreateCommand())
+            using (var command = CreateCommand())
             {
                 PrepareCommand(command, sql, parameters);
                 using (var reader = command.ExecuteReader())
@@ -280,7 +300,7 @@ namespace TinyDA.Data
         public T GetObjectSP<T>(string name, IFieldMapper fieldMapper, params object[] parameters)
         {
             var t = default(T);
-            using (var command = connection.CreateCommand())
+            using (var command = CreateCommand())
             {
                 PrepareSpCommand(command, name, parameters);
                 using (var reader = command.ExecuteReader())
@@ -321,7 +341,7 @@ namespace TinyDA.Data
         public List<T> GetListSP<T>(string name, IFieldMapper fieldMapper, params object[] parameters)
         {
             List<T> items;
-            using (var command = connection.CreateCommand())
+            using (var command = CreateCommand())
             {
                 PrepareSpCommand(command, name, parameters);
                 using (var reader = command.ExecuteReader())
@@ -348,7 +368,7 @@ namespace TinyDA.Data
         public List<IDictionary<string, object>> GetListSP(string name, IFieldMapper fieldMapper, params object[] parameters)
         {
             List<IDictionary<string, object>> items;
-            using (var command = connection.CreateCommand())
+            using (var command = CreateCommand())
             {
                 PrepareSpCommand(command, name, parameters);
                 using (var reader = command.ExecuteReader())
@@ -373,7 +393,7 @@ namespace TinyDA.Data
         /// <returns>The scalar value of type T</returns>
         public T ExecuteScalar<T>(string sql, params object[] parameters)
         {
-            using (var command = connection.CreateCommand())
+            using (var command = CreateCommand())
             {
                 PrepareCommand(command, sql, parameters);
                 var t = (T)command.ExecuteScalar();
@@ -389,7 +409,7 @@ namespace TinyDA.Data
         /// <returns>The number of affected rows</returns>
         public int ExecuteNonQuery(string sql, params object[] parameters)
         {
-            using (var command = connection.CreateCommand())
+            using (var command = CreateCommand())
             {
                 PrepareCommand(command, sql, parameters);
                 return command.ExecuteNonQuery();
