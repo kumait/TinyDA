@@ -421,5 +421,11 @@ namespace TinyDA.Data
         {
             return ExecuteNonQuery(sql, parameters);
         }
+
+
+        public T Insert<T>(object entity, string tableName, string identityFieldName, IFieldMapper fieldMapper)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

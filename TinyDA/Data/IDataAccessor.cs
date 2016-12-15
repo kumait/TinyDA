@@ -32,6 +32,8 @@ namespace TinyDA.Data
         
         [Obsolete]
         int ExecuteUpdate(string sql, params object[] parameters);
-        
+
+
+        T Insert<T>(object entity, string tableName, string identityFieldName, IFieldMapper fieldMapper);
     }
 }
