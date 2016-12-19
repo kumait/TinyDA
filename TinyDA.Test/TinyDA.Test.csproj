@@ -63,6 +63,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Student.cs" />
     <Compile Include="Student1.cs" />
     <Compile Include="Student3.cs" />
     <Compile Include="Student2.cs" />
@@ -71,6 +72,7 @@
     <Compile Include="Student4.cs" />
     <Compile Include="DictionaryTest.cs" />
     <Compile Include="StoredProcedureTest.cs" />
+    <Compile Include="Tests.cs" />
     <Compile Include="TransactionTest.cs" />
   </ItemGroup>
   <ItemGroup>

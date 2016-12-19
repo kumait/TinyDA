@@ -19,7 +19,7 @@ namespace TinyDA.Test
                 conn.Open();
                 using (var trans = conn.BeginTransaction())
                 {
-                    var da = new DataAccessor(conn, trans, new AttributeFieldMapper(typeof(Student3)));
+                    var da = new DataAccessor(conn, trans, new AttributeMapper(typeof(Student3)));
 
                     Assert.AreEqual(3, da.GetList<Student3>("select * from student").Count);
 

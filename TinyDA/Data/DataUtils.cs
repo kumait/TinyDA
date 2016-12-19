@@ -7,12 +7,12 @@ namespace TinyDA.Data
 {
     public static class DataUtils
     {
-        public static IDictionary<string, int> GetFieldToPropertyMap(IDataReader reader, Type type, IFieldMapper fieldMapper)
+        public static IDictionary<string, int> GetColumnToPropertyMap(IDataReader reader, Type type, IMapper fieldMapper)
         {
             IDictionary<string, int> fieldMap = new Dictionary<string, int>();
             for (var i = 0; i < reader.FieldCount; i++)
             {
-                var propertyName = fieldMapper.MapField(reader.GetName(i));
+                var propertyName = fieldMapper.GetPropertyName(reader.GetName(i));
                 if (propertyName != null)
                 {
                     fieldMap.Add(propertyName, i);
@@ -36,7 +36,7 @@ namespace TinyDA.Data
             return t;
         }
 
-        public static List<T> GetSingleFieldList<T>(IDataReader reader, int fieldIndex)
+        public static List<T> GetSingleColumnList<T>(IDataReader reader, int fieldIndex)
         {
             var items = new List<T>();
             while (reader.Read())
@@ -47,14 +47,14 @@ namespace TinyDA.Data
             return items;
         }
 
-        public static T GetObject<T>(IDataReader reader, IFieldMapper fieldMapper)
+        public static T GetObject<T>(IDataReader reader, IMapper fieldMapper)
         {
-            return GetObject<T>(reader, GetFieldToPropertyMap(reader, typeof(T), fieldMapper));
+            return GetObject<T>(reader, GetColumnToPropertyMap(reader, typeof(T), fieldMapper));
         }
 
-        public static List<T> GetList<T>(IDataReader reader, IFieldMapper fieldMapper)
+        public static List<T> GetList<T>(IDataReader reader, IMapper fieldMapper)
         {
-            var fieldMap = GetFieldToPropertyMap(reader, typeof(T), fieldMapper);
+            var fieldMap = GetColumnToPropertyMap(reader, typeof(T), fieldMapper);
             var items = new List<T>();
             while (reader.Read())
             {
@@ -64,18 +64,18 @@ namespace TinyDA.Data
             return items;
         }
 
-        public static IDictionary<string, object> GetObject(IDataReader reader, IFieldMapper fieldMapper)
+        public static IDictionary<string, object> GetObject(IDataReader reader, IMapper fieldMapper)
         {
             var result = new Dictionary<string, object>();
             for (var i = 0; i < reader.FieldCount; i++)
             {
-                var key = fieldMapper.MapField(reader.GetName(i));
+                var key = fieldMapper.GetPropertyName(reader.GetName(i));
                 result[key] = reader.GetValue(i);
             }
             return result;
         }
 
-        public static List<IDictionary<string, object>> GetList(IDataReader reader, IFieldMapper fieldMapper)
+        public static List<IDictionary<string, object>> GetList(IDataReader reader, IMapper fieldMapper)
         {
             var result = new List<IDictionary<string, object>>();
             while (reader.Read())

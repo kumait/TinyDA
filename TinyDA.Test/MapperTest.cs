@@ -51,7 +51,7 @@ namespace TinyDA.Test
         [TestMethod]
         public void TestUnderscoreFieldMapper()
         {
-            IDataAccessor da = new DataAccessor(connection, new UnderscoreFieldMapper());
+            IDataAccessor da = new DataAccessor(connection, new UnderscoreMapper());
 
             Student2 student = da.GetObject<Student2>("select * from student where STUDENT_NAME = ?", "Jack");
             Assert.IsNotNull(student.StudentId);
@@ -66,7 +66,7 @@ namespace TinyDA.Test
         [TestMethod]
         public void TestAttributeFieldMapper()
         {
-            IDataAccessor da = new DataAccessor(connection, new AttributeFieldMapper(typeof(Student3)));
+            IDataAccessor da = new DataAccessor(connection, new AttributeMapper(typeof(Student3)));
 
             Student3 student = da.GetObject<Student3>("select * from student where STUDENT_NAME = ?", "Jack");
             Assert.IsNotNull(student.Id);
@@ -83,7 +83,7 @@ namespace TinyDA.Test
         {
             IDataAccessor da = new DataAccessor(connection);
 
-            var mapper = new CustomFieldMapper((f) => {
+            var mapper = new CustomMapper((f) => {
                 switch (f)
                 {
                     case "STUDENT_ID": return "Number";

@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>1.3.0</version>
+    <title>TinyDA</title>
+    <authors>Kumait</authors>
+    <owners>Kumait</owners>
+    <licenseUrl>https://github.com/kumait/TinyDA/blob/v1.2/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/kumait/TinyDA</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>TinyDA is a very lightweight easy-to-use data access library for .net</description>
+    <releaseNotes>Added Insert and Update methods to IDataAccessor</releaseNotes>
+    <copyright>Copyright 2016</copyright>
+    <tags>ADO.net data DataAccess sql lightweight</tags>
+  </metadata>
+</package>

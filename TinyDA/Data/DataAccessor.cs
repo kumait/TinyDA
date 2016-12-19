@@ -11,17 +11,17 @@ namespace TinyDA.Data
         private readonly IDbConnection connection;
         private readonly IDbTransaction transaction;
 
-        private readonly IFieldMapper defaultFieldMapper;
+        private readonly IMapper defaultMapper;
 
-        public DataAccessor(IDbConnection connection, IDbTransaction transaction, IFieldMapper defaultFieldMapper)
+        public DataAccessor(IDbConnection connection, IDbTransaction transaction, IMapper defaultMapper)
         {
             this.connection = connection;
             this.transaction = transaction;
-            this.defaultFieldMapper = defaultFieldMapper ?? new SimpleFieldMapper();
+            this.defaultMapper = defaultMapper ?? new SimpleMapper();
         }
 
-        public DataAccessor(IDbConnection connection, IFieldMapper defaultFieldMapper)
-            : this(connection, null, defaultFieldMapper) { }
+        public DataAccessor(IDbConnection connection, IMapper defaultMapper)
+            : this(connection, null, defaultMapper) { }
 
         public DataAccessor(IDbConnection connection, IDbTransaction transaction)
             : this(connection, transaction, null) { }
@@ -100,10 +100,10 @@ namespace TinyDA.Data
         /// </summary>
         /// <typeparam name="T">The type of returned the object</typeparam>
         /// <param name="sql">The SQL query</param>
-        /// <param name="fieldMapper">The field mapper used to map field names to property names</param>
+        /// <param name="mapper">The field mapper used to map field names to property names</param>
         /// <param name="parameters">The paramaters passed to the SQL query</param>
         /// <returns>The object of type T</returns>
-        public T GetObject<T>(string sql, IFieldMapper fieldMapper, params object[] parameters)
+        public T GetObject<T>(string sql, IMapper mapper, params object[] parameters)
         {
             var t = default(T);
             using (var command = CreateCommand())
@@ -113,7 +113,7 @@ namespace TinyDA.Data
                 {
                     if (reader.Read())
                     {
-                        t = DataUtils.GetObject<T>(reader, fieldMapper);
+                        t = DataUtils.GetObject<T>(reader, mapper);
                     }
                 }
             }
@@ -130,7 +130,7 @@ namespace TinyDA.Data
         /// <returns>The object of type T</returns>
         public T GetObject<T>(string sql, params object[] parameters)
         {
-            return GetObject<T>(sql, defaultFieldMapper, parameters);
+            return GetObject<T>(sql, defaultMapper, parameters);
         }
 
         /// <summary>
@@ -141,17 +141,17 @@ namespace TinyDA.Data
         /// <returns>dictionary object or null</returns>
         public IDictionary<string, object> GetObject(string sql, params object[] parameters)
         {
-            return GetObject(sql, defaultFieldMapper, parameters);
+            return GetObject(sql, defaultMapper, parameters);
         }
 
         /// <summary>
         /// eturns a single dictionary object as a result of running SQL statement
         /// </summary>
         /// <param name="sql"></param>
-        /// <param name="fieldMapper"></param>
+        /// <param name="mapper"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public IDictionary<string, object> GetObject(string sql, IFieldMapper fieldMapper, params object[] parameters)
+        public IDictionary<string, object> GetObject(string sql, IMapper mapper, params object[] parameters)
         {
             IDictionary<string, object> result = null;
             using (var command = CreateCommand())
@@ -161,7 +161,7 @@ namespace TinyDA.Data
                 {
                     if (reader.Read())
                     {
-                        result = DataUtils.GetObject(reader, fieldMapper);
+                        result = DataUtils.GetObject(reader, mapper);
                     }
                 }
             }
@@ -174,10 +174,10 @@ namespace TinyDA.Data
         /// </summary>
         /// <typeparam name="T">The generic type of the list</typeparam>
         /// <param name="sql">The SQL query</param>
-        /// <param name="fieldMapper">The field mapper used to map field names to property names</param>
+        /// <param name="mapper">The field mapper used to map field names to property names</param>
         /// <param name="parameters">The paramaters passed to the SQL query</param>
         /// <returns>Generic list of objects of type T</returns>
-        public List<T> GetList<T>(string sql, IFieldMapper fieldMapper, params object[] parameters)
+        public List<T> GetList<T>(string sql, IMapper mapper, params object[] parameters)
         {
             List<T> items;
             using (var command = CreateCommand())
@@ -185,7 +185,7 @@ namespace TinyDA.Data
                 PrepareCommand(command, sql, parameters);
                 using (var reader = command.ExecuteReader())
                 {
-                    items = DataUtils.GetList<T>(reader, fieldMapper);
+                    items = DataUtils.GetList<T>(reader, mapper);
                 }
             }
             return items;
@@ -201,17 +201,17 @@ namespace TinyDA.Data
         /// <returns>Generic list of objects of type T</returns>
         public List<T> GetList<T>(string sql, params object[] parameters)
         {
-            return GetList<T>(sql, defaultFieldMapper, parameters);
+            return GetList<T>(sql, defaultMapper, parameters);
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="sql"></param>
-        /// <param name="fieldMapper"></param>
+        /// <param name="mapper"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public List<IDictionary<string, object>> GetList(string sql, IFieldMapper fieldMapper, params object[] parameters)
+        public List<IDictionary<string, object>> GetList(string sql, IMapper mapper, params object[] parameters)
         {
             List<IDictionary<string, object>> items;
             using (var command = CreateCommand())
@@ -219,7 +219,7 @@ namespace TinyDA.Data
                 PrepareCommand(command, sql, parameters);
                 using (var reader = command.ExecuteReader())
                 {
-                    items = DataUtils.GetList(reader, fieldMapper);
+                    items = DataUtils.GetList(reader, mapper);
                 }
             }
             return items;
@@ -233,7 +233,7 @@ namespace TinyDA.Data
         /// <returns></returns>
         public List<IDictionary<string, object>> GetList(string sql, params object[] parameters)
         {
-            return GetList(sql, defaultFieldMapper, parameters);
+            return GetList(sql, defaultMapper, parameters);
         }
 
 
@@ -279,7 +279,7 @@ namespace TinyDA.Data
                 PrepareCommand(command, sql, parameters);
                 using (var reader = command.ExecuteReader())
                 {
-                    items = DataUtils.GetSingleFieldList<T>(reader, fieldIndex);
+                    items = DataUtils.GetSingleColumnList<T>(reader, fieldIndex);
                 }
             }
             return items;
@@ -291,10 +291,10 @@ namespace TinyDA.Data
         /// </summary>
         /// <typeparam name="T">The type of the returned object</typeparam>
         /// <param name="name">The stored procedure name</param>        
-        /// <param name="fieldMapper">The field mapper used to map field names to property names</param>
+        /// <param name="mapper">The field mapper used to map field names to property names</param>
         /// <param name="parameters">The paramaters passed to the stored procedure</param>
         /// <returns>The object of type T</returns>
-        public T GetObjectSP<T>(string name, IFieldMapper fieldMapper, params object[] parameters)
+        public T GetObjectSP<T>(string name, IMapper mapper, params object[] parameters)
         {
             var t = default(T);
             using (var command = CreateCommand())
@@ -304,7 +304,7 @@ namespace TinyDA.Data
                 {
                     if (reader.Read())
                     {
-                        t = DataUtils.GetObject<T>(reader, fieldMapper);
+                        t = DataUtils.GetObject<T>(reader, mapper);
                     }
                 }
 
@@ -322,7 +322,7 @@ namespace TinyDA.Data
         /// <returns>The object of type T</returns>
         public T GetObjectSP<T>(string name, params object[] parameters)
         {
-            return GetObjectSP<T>(name, defaultFieldMapper, parameters);
+            return GetObjectSP<T>(name, defaultMapper, parameters);
         }
 
 
@@ -332,10 +332,10 @@ namespace TinyDA.Data
         /// </summary>
         /// <typeparam name="T">The generic type of the list</typeparam>
         /// <param name="name">The stored procedure name</param>
-        /// <param name="fieldMapper">The field mapper used to map field names to property names</param>
+        /// <param name="mapper">The field mapper used to map field names to property names</param>
         /// <param name="parameters">The paramaters passed to the stored procedure</param>
         /// <returns>Generic list of objects of type T</returns>
-        public List<T> GetListSP<T>(string name, IFieldMapper fieldMapper, params object[] parameters)
+        public List<T> GetListSP<T>(string name, IMapper mapper, params object[] parameters)
         {
             List<T> items;
             using (var command = CreateCommand())
@@ -343,7 +343,7 @@ namespace TinyDA.Data
                 PrepareSpCommand(command, name, parameters);
                 using (var reader = command.ExecuteReader())
                 {
-                    items = DataUtils.GetList<T>(reader, fieldMapper);
+                    items = DataUtils.GetList<T>(reader, mapper);
                 }
             }
             return items;
@@ -359,10 +359,10 @@ namespace TinyDA.Data
         /// <returns>Generic list of objects of type T</returns>
         public List<T> GetListSP<T>(string name, params object[] parameters)
         {
-            return GetListSP<T>(name, defaultFieldMapper, parameters);
+            return GetListSP<T>(name, defaultMapper, parameters);
         }
 
-        public List<IDictionary<string, object>> GetListSP(string name, IFieldMapper fieldMapper, params object[] parameters)
+        public List<IDictionary<string, object>> GetListSP(string name, IMapper mapper, params object[] parameters)
         {
             List<IDictionary<string, object>> items;
             using (var command = CreateCommand())
@@ -370,7 +370,7 @@ namespace TinyDA.Data
                 PrepareSpCommand(command, name, parameters);
                 using (var reader = command.ExecuteReader())
                 {
-                    items = DataUtils.GetList(reader, fieldMapper);
+                    items = DataUtils.GetList(reader, mapper);
                 }
             }
             return items;
@@ -378,7 +378,7 @@ namespace TinyDA.Data
 
         public List<IDictionary<string, object>> GetListSP(string name, params object[] parameters)
         {
-            return GetListSP(name, defaultFieldMapper, parameters);
+            return GetListSP(name, defaultMapper, parameters);
         }
 
         /// <summary>
@@ -414,7 +414,7 @@ namespace TinyDA.Data
         }
 
         /// <summary>
-        /// Use ExecuteNonQuery instead to have the naming as ADO.net
+        /// Use ExecuteNonQuery instead
         /// </summary>
         [Obsolete]
         public int ExecuteUpdate(string sql, params object[] parameters)
@@ -422,10 +422,115 @@ namespace TinyDA.Data
             return ExecuteNonQuery(sql, parameters);
         }
 
-
-        public T Insert<T>(object entity, string tableName, string identityFieldName, IFieldMapper fieldMapper)
+        /// <summary>
+        /// Inserts an entity in the database
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="entity"></param>
+        /// <param name="table"></param>
+        /// <param name="identityColumn"></param>
+        /// <param name="mapper"></param>
+        /// <returns></returns>
+        public T Insert<T>(object entity, string table, string identityColumn, IMapper mapper)
         {
-            throw new NotImplementedException();
+            var poperties = entity.GetType().GetProperties();
+            var columns = new List<string>();
+            var questionMarks = new List<string>();
+            var values = new List<object>();
+
+            foreach (var pi in poperties)
+            {
+                var columnName = mapper.GetColumnName(pi.Name);
+                if (columnName != identityColumn)
+                {
+                    columns.Add(columnName);
+                    questionMarks.Add("?");
+                    values.Add(pi.GetValue(entity));
+                }
+            }
+
+            var sb = new StringBuilder();
+            sb.AppendFormat("insert into {0} ", table);
+            sb.AppendFormat("({0})", StringUtils.GenerateCommaSeparatedString(columns, null, null));
+
+            if (identityColumn != null)
+            {
+                sb.AppendFormat(" output inserted.{0}", identityColumn);
+            }
+
+            sb.Append(" values ");
+            sb.AppendFormat("({0})", StringUtils.GenerateCommaSeparatedString(questionMarks, null, null));
+
+            var sql = sb.ToString();
+
+            return ExecuteScalar<T>(sql, values.ToArray());
+        }
+
+        public T Insert<T>(object entity, string table, string identityColumn)
+        {
+            return Insert<T>(entity, table, identityColumn, defaultMapper);
+        }
+
+        public int Update(object entity, string table, string selectionColumn, object selectionValue, IMapper mapper)
+        {
+            var poperties = entity.GetType().GetProperties();
+            var columns = new List<string>();
+            var values = new List<object>();
+            
+            foreach (var pi in poperties)
+            {
+                var columnName = mapper.GetColumnName(pi.Name);
+                columns.Add(columnName);
+                values.Add(pi.GetValue(entity));
+            }
+            values.Add(selectionValue);
+
+            var sb = new StringBuilder();
+            sb.AppendFormat("update {0} set ", table);
+            for (int i = 0; i < columns.Count; i++)
+            {
+                if (i > 0)
+                {
+                    sb.Append(", ");
+                }
+                sb.AppendFormat("{0} = ?", columns[i]);
+            }
+
+            sb.AppendFormat(" where {0} = ?", selectionColumn);
+            var sql = sb.ToString();
+
+            return ExecuteNonQuery(sql, values.ToArray());
+        }
+
+        public void Insert(object entity, string table, IMapper mapper)
+        {
+            var poperties = entity.GetType().GetProperties();
+            var columns = new List<string>();
+            var questionMarks = new List<string>();
+            var values = new List<object>();
+
+            foreach (var pi in poperties)
+            {
+                var columnName = mapper.GetColumnName(pi.Name);
+                columns.Add(columnName);
+                questionMarks.Add("?");
+                values.Add(pi.GetValue(entity));
+            }
+
+            var sb = new StringBuilder();
+            sb.AppendFormat("insert into {0} ", table);
+            sb.AppendFormat("({0})", StringUtils.GenerateCommaSeparatedString(columns, null, null));
+            
+            sb.Append(" values ");
+            sb.AppendFormat("({0})", StringUtils.GenerateCommaSeparatedString(questionMarks, null, null));
+
+            var sql = sb.ToString();
+            ExecuteNonQuery(sql, values.ToArray());
+        }
+
+        public void Insert(object entity, string table)
+        {
+            Insert(entity, table, defaultMapper);
         }
     }
 }
