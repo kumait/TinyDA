@@ -46,7 +46,7 @@ User u = da.getListSP<User>("GET_USERS", 22);
 ```
 ## Using mappers
 
-####Database
+#### Database
 
 ``` SQL
 CREATE TABLE STUDENT (
@@ -64,7 +64,7 @@ INSERT INTO STUDENT (STUDENT_NAME, COURSES, BIRTH_DATE) VALUES ('Sara', 16, '198
 ```
 ### Attribute Mapper
 
-####Student Class
+#### Student Class
 
 ``` CS
 public class Student
@@ -83,7 +83,7 @@ public class Student
 }
 ```
 
-###Accessing Data
+### Accessing Data
 ``` CS
 string SqlServerConnectionString = "Data Source=localhost;Initial Catalog=tinydatest;Integrated Security=True";
 using (IDbConnection connection = new SqlConnection(SqlServerConnectionString))
@@ -103,7 +103,7 @@ using (IDbConnection connection = new SqlConnection(SqlServerConnectionString))
 
 ### Custom mapper
 
-####Student Class
+#### Student Class
 ``` CS
 public class Student4
 {
@@ -114,7 +114,7 @@ public class Student4
 }
 ```
 
-###Accessing Data
+### Accessing Data
 
 ``` CS
 IDataAccessor da = new DataAccessor(connection);
@@ -136,6 +136,6 @@ List<Student3> students = da.GetList<Student3>("select * from student", mapper);
 
 For more examples, please have a look at the [Test Project](https://github.com/kumait/TinyDA/tree/v1.2/TinyDA.Test).
 
-##Installation
+## Installation
 
 TinyDA is available on [NuGet](https://www.nuget.org/packages/TinyDA/), or you can download the latest build [here](https://github.com/kumait/TinyDA/releases).
